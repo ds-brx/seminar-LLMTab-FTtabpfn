@@ -14,17 +14,27 @@ FT-TabPFN aims to address this limitation by:
 
 This project independently reproduces FT-TabPFN to verify these claims and assess its effectiveness. Through extensive testing, we compare FT-TabPFN against TabPFN and analyze its actual impact on classification performance.  
 
-## Performance Comparison
+## Performance Comparison  
 
-The following plot shows the performance comparison between FT-TabPFN and TabPFN across datasets:
+The following plot shows the performance comparison between FT-TabPFN and TabPFN across datasets:  
 
-![Performance Comparison](images/performance_comparison.png)
+<p align="center">
+  <img src="images/performance.png" alt="Performance Comparison" width="500">
+</p>
 
-## Learning Curves
+## Learning Curves  
 
-The learning curves for different models over training epochs:
+The learning curves for different models over training epochs during verification:  
 
-![Learning Curve](images/learning_curve.png)
+<p align="center">
+  <img src="images/visual_og.png" alt="Learning Curve - Original" width="500">
+</p>
+
+The learning curves for different models over training epochs after tuning:  
+
+<p align="center">
+  <img src="images/visual_tuned.png" alt="Learning Curve - Tuned" width="500">
+</p>
 
 ## Code Reproduction Steps  
 
