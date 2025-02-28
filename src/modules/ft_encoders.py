@@ -4,6 +4,16 @@ from torch.nn.parameter import Parameter
 from torch import Tensor
 from typing import List
 
+"""
+Citation:
+@inproceedings{gorishniy2021revisiting,
+    title={Revisiting Deep Learning Models for Tabular Data},
+    author={Yury Gorishniy and Ivan Rubachev and Valentin Khrulkov and Artem Babenko},
+    booktitle={{NeurIPS}},
+    year={2021},
+}
+"""
+
 class CategoricalEmbeddings(nn.Module):
     def __init__(self, cardinalities: List[int], d_embedding: int, bias: bool = True):
         """

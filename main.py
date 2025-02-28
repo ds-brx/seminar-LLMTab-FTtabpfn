@@ -164,7 +164,9 @@ def run_repetition(X, y, dataset_name, seed, epochs, batch_size=32, lr=1e-3):
     X,y = preprocessor.fit(X, y)
 
     # Create the train-test split (50/50) using the current seed.
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.5, random_state=seed)
+    X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.5, random_state=seed, stratify=y
+)
 
     X_train_num, X_train_cat, y_train = preprocessor.transform(X_train, y_train)
     X_test_num, X_test_cat, y_test = preprocessor.transform(X_test, y_test)
@@ -274,54 +276,43 @@ def main_experiment(X, y, dataset_name = "", epochs=10, seeds=[0, 42, 7, 123, 20
 if __name__ == "__main__":
 
     dataset_names = ["cmc", "credit-approval", "cylinder-bands", "dresses-sales"]
-    for dataset_name in dataset_names:
-        X, y = fetch_openml(name=dataset_name, version=1, return_X_y=True,as_frame=True)
-        print(dataset_name)
-        main(X,y)
 
+    lrs = [1e-2, 1e-3, 1e-6]
+    batch_sizes = [128,256]
+    epochs = [30, 60, 90, 120]
+    all_columns = ["Dataset", "Epoch", "LR", "Batch-Size", "Mean-ROC", "ROC-per-Seed", "CI-L", "CI-U"]
+    results_csv_path = "results.csv"
     
-    # lrs = [1e-2, 1e-3, 1e-6]
-    # batch_sizes = [128,256]
-    # epochs = [30, 60, 90, 120]
-    # all_columns = ["Dataset", "Epoch", "LR", "Batch-Size", "Mean-ROC", "ROC-per-Seed", "CI-L", "CI-U"]
-    # results_csv_path = "results.csv"
+    if not os.path.exists(results_csv_path):
+        pd.DataFrame(columns=[all_columns]).to_csv(results_csv_path, index=False)
     
-    # if not os.path.exists(results_csv_path):
-    #     pd.DataFrame(columns=[all_columns]).to_csv(results_csv_path, index=False)
-    
-    # # for epoch in epochs:
-    # #     for dataset_name in dataset_names:
-    # #         for lr in lrs:
-    # #             for batch_size in batch_sizes:
-    # # 1) lr 2) batch 3) epoch
-    # epoch = 30
-    # dataset_name = "cmc"
-    # lr = 1e-3
-    # batch_size = 128
-    
+    for epoch in epochs:
+        for dataset_name in dataset_names:
+            for lr in lrs:
+                for batch_size in batch_sizes:
 
-    # X, y = fetch_openml(name=dataset_name, version=1, return_X_y=True,as_frame=True)
-    # mean_auc, roc_auc_scores, lower_ci, upper_ci = main_experiment(
-    #     X=X,
-    #     y=y,
-    #     dataset_name = dataset_name,
-    #     epochs=epoch,
-    #     batch_size=batch_size,
-    #     lr = lr
-    # )
+                    X, y = fetch_openml(name=dataset_name, version=1, return_X_y=True,as_frame=True)
+                    mean_auc, roc_auc_scores, lower_ci, upper_ci = main_experiment(
+                        X=X,
+                        y=y,
+                        dataset_name = dataset_name,
+                        epochs=epoch,
+                        batch_size=batch_size,
+                        lr = lr
+                    )
 
-    # report = {
-    #     "Dataset": dataset_name,
-    #     "Epoch" : epoch,
-    #     "LR" : lr,
-    #     "Batch-Size": batch_size,
-    #     "Mean-ROC" : f"{mean_auc:.4f}",
-    #     "ROC-per-Seed" : str(roc_auc_scores),
-    #     "CI-L" : str(lower_ci),
-    #     "CI-U" : str(upper_ci)
-    # }
-    # print(report)
-    # pd.DataFrame([report]).to_csv(results_csv_path, mode='a', index=False, header=False)
+                    report = {
+                        "Dataset": dataset_name,
+                        "Epoch" : epoch,
+                        "LR" : lr,
+                        "Batch-Size": batch_size,
+                        "Mean-ROC" : f"{mean_auc:.4f}",
+                        "ROC-per-Seed" : str(roc_auc_scores),
+                        "CI-L" : str(lower_ci),
+                        "CI-U" : str(upper_ci)
+                    }
+                    print(report)
+                    pd.DataFrame([report]).to_csv(results_csv_path, mode='a', index=False, header=False)
 
 
 
